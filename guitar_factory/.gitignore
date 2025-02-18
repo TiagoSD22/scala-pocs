@@ -1,0 +1,31 @@
+# Scala specific
+target/
+*.class
+*.log
+*.cache
+*.project
+*.idea_modules
+*.iml
+*.iws
+lib_managed/
+src_managed/
+project/target/
+project/project/
+
+# SBT specific
+dist/
+target/
+lib_managed/
+src_managed/
+project/target/
+project/project/
+.history
+.cache
+.lib/
+
+# IntelliJ IDEA specific
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
