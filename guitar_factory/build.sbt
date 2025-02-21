@@ -13,5 +13,6 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-circe" % "0.23.12",
   "org.http4s" %% "http4s-dsl" % "0.23.12",
   "io.circe" %% "circe-generic" % "0.14.2",
-  "org.log4s" %% "log4s" % "1.10.0"
+  "org.log4s" %% "log4s" % "1.10.0",
+  "org.scalameta" %% "munit" % "0.7.29" % Test
 )
