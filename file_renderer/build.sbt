@@ -6,3 +6,4 @@ lazy val root = (project in file("."))
   .settings(
     name := "file_renderer"
   )
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % Test
