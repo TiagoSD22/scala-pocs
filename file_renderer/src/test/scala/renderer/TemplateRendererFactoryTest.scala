@@ -1,7 +1,6 @@
 package renderer
 
 import org.scalatest.funsuite.AnyFunSuite
-import renderer._
 
 class TemplateRendererFactoryTest extends AnyFunSuite {
 
