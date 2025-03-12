@@ -19,7 +19,9 @@ object App extends zio.ZIOAppDefault {
     val taxCalculation = for {
       taxCalculator <- ZIO.service[TaxCalculator]
       calculation <- taxCalculator.calculateTax(product, state, year)
-      _ <- ZIO.succeed(println(s"Tax Calculation: $calculation"))
+      _ <- ZIO.succeed(println(s"Product: ${product.name}, Value: ${product.price}, " +
+                               s"State: ${state.name}, Tax Rate: ${calculation.taxRate}, " +
+                               s"Tax Amount: ${calculation.taxAmount}"))
     } yield ()
 
     taxCalculation.provideLayer(taxCalculatorLayer).exitCode
