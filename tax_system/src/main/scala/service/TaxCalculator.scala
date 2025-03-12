@@ -8,6 +8,6 @@ class TaxCalculator(taxService: TaxService) {
     for {
       taxRate <- taxService.getTaxRate(state, year)
       taxAmount = product.price * taxRate.rate
-    } yield TaxCalculation(product, state, year, taxAmount)
+    } yield TaxCalculation(product, state, year, taxRate.rate, taxAmount)
   }
 }
