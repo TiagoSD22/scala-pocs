@@ -8,9 +8,16 @@ object App extends zio.ZIOAppDefault {
   val state = State("California")
   val year = 2023
 
+  val taxRatesConfig: Map[(String, Int), BigDecimal] = Map(
+    ("California", 2023) -> 0.075,
+    ("New York", 2023) -> 0.085
+  )
+
   val taxServiceLayer: ULayer[TaxService] = ZLayer.succeed(new TaxService {
-    override def getTaxRate(state: State, year: Int): ZIO[Any, Nothing, TaxRate] =
-      ZIO.succeed(TaxRate(state, year, 0.075))
+    override def getTaxRate(state: State, year: Int): ZIO[Any, Nothing, TaxRate] = {
+      val rate = taxRatesConfig.getOrElse((state.name, year), BigDecimal(0.0))
+      ZIO.succeed(TaxRate(state, year, rate))
+    }
   })
 
   val taxCalculatorLayer: ULayer[TaxCalculator] = taxServiceLayer >>> ZLayer.fromFunction(new TaxCalculator(_))
