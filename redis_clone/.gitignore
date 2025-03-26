@@ -1,0 +1,19 @@
+# sbt specific
+target/
+project/target/
+project/project/
+
+# IntelliJ IDEA specific
+.idea/
+*.iml
+*.iws
+out/
+
+# MacOS specific
+.DS_Store
+
+# General
+*.log
+*.tmp
+*.bak
+*.swp
