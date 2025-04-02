@@ -20,7 +20,7 @@ class Client(private val protocol: String, private val port: Int = 8234, private
 
     out.println(message)
     val response = in.readLine()
-    println(s"Received response: $response")
+    println(s"[CLIENT] - [${protocol.toUpperCase}] - Received response: $response")
 
     socket.close()
   }
@@ -37,7 +37,7 @@ class Client(private val protocol: String, private val port: Int = 8234, private
     val responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length)
     socket.receive(responsePacket)
     val response = new String(responsePacket.getData, 0, responsePacket.getLength)
-    println(s"Received response: $response")
+    println(s"[CLIENT] - [${protocol.toUpperCase}] - Received response: $response")
 
     socket.close()
   }
