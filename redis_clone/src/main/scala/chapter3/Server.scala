@@ -3,10 +3,7 @@ package chapter3
 import java.net.{DatagramPacket, DatagramSocket, InetAddress, ServerSocket, Socket}
 import java.io.{BufferedReader, InputStreamReader, PrintWriter}
 
-class Server {
-  private val protocol = "tcp" // or "udp"
-  private val port = 8080
-  private val address = "127.0.0.1"
+class Server(private val protocol: String, private val port: Int = 8234, private val address: String = "127.0.0.1") {
 
   def start(): Unit = {
     protocol.toLowerCase match {
@@ -17,8 +14,8 @@ class Server {
   }
 
   private def startTcpServer(): Unit = {
-    val serverSocket = new ServerSocket(port, 50, address)
-    println(s"TCP server started on ${address.getHostAddress}:$port")
+    val serverSocket = new ServerSocket(port, 50, InetAddress.getByName(address))
+    println(s"TCP server started on ${address}:$port")
 
     while (true) {
       val clientSocket = serverSocket.accept()
@@ -36,8 +33,8 @@ class Server {
   }
 
   private def startUdpServer(): Unit = {
-    val socket = new DatagramSocket(port, address)
-    println(s"UDP server started on ${address.getHostAddress}:$port")
+    val socket = new DatagramSocket(port, InetAddress.getByName(address))
+    println(s"UDP server started on ${address}:$port")
 
     while (true) {
       val buffer = new Array[Byte](1024)
