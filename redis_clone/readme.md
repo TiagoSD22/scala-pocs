@@ -11,6 +11,9 @@ For more information on the original implementation and the concepts behind Redi
 ## Project Structure
 
 - `src/main/scala/chapter3/Server.scala`: Contains the server implementation that handles TCP and UDP connections.
+- `src/main/scala/chapter4/Server.scala`: Contains the updated server implementation that handles TCP connections and processes client requests.
+- `src/main/scala/chapter4/Client.scala`: Contains the client implementation that connects to the server, sends messages, and receives acknowledgments.
+- `src/main/scala/chapter4/App.scala`: Contains the application entry point to start the server and send client requests.
 - `build.sbt`: SBT build configuration file.
 
 ## Getting Started
@@ -26,31 +29,3 @@ For more information on the original implementation and the concepts behind Redi
    ```sh
    git clone https://github.com/yourusername/redis_clone.git
    cd redis_clone
-   ```
-
-2. Update the `application.conf` file with the desired configuration:
-   ```hocon
-   server {
-     protocol = "tcp"  # or "udp"
-     address = "127.0.0.1"
-     port = 8080
-   }
-   ```
-
-3. Start the server using SBT:
-   ```sh
-   sbt run
-   ```
-
-## Features
-
-- **TCP and UDP Support**: The server can handle both TCP and UDP connections based on the configuration.
-- **Message Logging and Acknowledgment**: The server logs incoming messages and sends back an acknowledgment.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
