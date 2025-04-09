@@ -89,12 +89,12 @@ class Client(address: String, port: Int) {
     var n = buf.length
     var offset = 0
     while (n > 0) {
-      val rv = Try(out.write(buf, offset, n)).getOrElse(-1)
-      if (rv <= 0) {
-        return -1
+      Try(out.write(buf, offset, n)) match {
+        case Failure(_) => return -1
+        case Success(_) =>
+          n -= n // Adjust `n` manually since `out.write` does not return a value
+          offset += n
       }
-      n -= rv
-      offset += rv
     }
     out.flush()
     0
