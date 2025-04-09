@@ -75,7 +75,7 @@ class Server(port: Int) {
 
   private def tryOneRequest(conn: Connection): Boolean = {
     if (conn.incoming.length < 4) return false
-    val len = ByteBuffer.wrap(conn.incoming.take(4)).getInt
+    val len = ByteBuffer.wrap(conn.incoming.take(4).toArray).getInt
     if (len > kMaxMsg) {
       println("Message too long")
       conn.wantClose = true
@@ -83,7 +83,7 @@ class Server(port: Int) {
     }
     if (conn.incoming.length < 4 + len) return false
     val request = conn.incoming.slice(4, 4 + len)
-    println(s"Client says: len: $len data: ${new String(request.take(100))}")
+    println(s"Client says: len: $len data: ${new String(request.take(100).toArray)}")
     conn.outgoing ++= ByteBuffer.allocate(4).putInt(len).array()
     conn.outgoing ++= request
     conn.incoming = conn.incoming.drop(4 + len)
