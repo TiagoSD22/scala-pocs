@@ -41,3 +41,55 @@ class HTab(var tab: Array[Option[HNode]] = Array.fill(0)(None), var mask: Int = 
   }
 }
 
+class HMap {
+  private val kRehashingWork = 128
+  private val kMaxLoadFactor = 8
+
+  var newer: HTab = new HTab()
+  var older: HTab = new HTab()
+  var migratePos: Int = 0
+
+  def hmHelpRehashing(): Unit = {
+    var nwork = 0
+    while (nwork < kRehashingWork && older.size > 0) {
+      val from = older.tab(migratePos)
+      if (from.isEmpty) {
+        migratePos += 1
+      } else {
+        newer.hInsert(older.hDetach(from).get)
+        nwork += 1
+      }
+    }
+    if (older.size == 0 && older.tab.nonEmpty) {
+      older = new HTab()
+    }
+  }
+
+  def hmTriggerRehashing(): Unit = {
+    require(older.tab.isEmpty, "Older table must be empty")
+    older = newer
+    newer = new HTab()
+    newer.hInit((older.mask + 1) * 2)
+    migratePos = 0
+  }
+
+  def hmLookup(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
+    hmHelpRehashing()
+    newer.hLookup(key, eq).orElse(older.hLookup(key, eq))
+  }
+
+
+
+  def hmDelete(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
+    hmHelpRehashing()
+    newer.hLookup(key, eq).flatMap(newer.hDetach).orElse(older.hLookup(key, eq).flatMap(older.hDetach))
+  }
+
+  def hmClear(): Unit = {
+    newer = new HTab()
+    older = new HTab()
+    migratePos = 0
+  }
+
+  def hmSize: Int = newer.size + older.size
+}
