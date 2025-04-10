@@ -25,7 +25,20 @@ class Server(port: Int) {
   private val connections = mutable.Map[Int, Connection]()
   private val dataStore = mutable.Map[String, String]()
 
-
+  def start(): Unit = {
+    println(s"Server started on port $port")
+    while (true) {
+      selector.select()
+      val selectedKeys = selector.selectedKeys().iterator()
+      while (selectedKeys.hasNext) {
+        val key = selectedKeys.next()
+        selectedKeys.remove()
+        if (key.isAcceptable) handleAccept(key)
+        if (key.isReadable) handleRead(key)
+        if (key.isWritable) handleWrite(key)
+      }
+    }
+  }
 
   private def handleAccept(key: SelectionKey): Unit = {
     val serverChannel = key.channel().asInstanceOf[ServerSocketChannel]
