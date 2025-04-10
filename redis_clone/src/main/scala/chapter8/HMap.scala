@@ -78,7 +78,19 @@ class HMap {
     newer.hLookup(key, eq).orElse(older.hLookup(key, eq))
   }
 
-
+  def hmInsert(node: HNode): Unit = {
+    if (newer.tab.isEmpty) {
+      newer.hInit(4)
+    }
+    newer.hInsert(node)
+    if (older.tab.isEmpty) {
+      val threshold = (newer.mask + 1) * kMaxLoadFactor
+      if (newer.size >= threshold) {
+        hmTriggerRehashing()
+      }
+    }
+    hmHelpRehashing()
+  }
 
   def hmDelete(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
     hmHelpRehashing()
