@@ -42,5 +42,35 @@ object AVLNode {
     newNode
   }
 
-  
+  def rotRight(node: AVLNode): AVLNode = {
+    val parent = node.parent
+    val newNode = node.left
+    val inner = newNode.right
+
+    node.left = inner
+    if (inner != null) inner.parent = node
+
+    newNode.parent = parent
+    newNode.right = node
+    node.parent = newNode
+
+    avlUpdate(node)
+    avlUpdate(newNode)
+    newNode
+  }
+
+  def avlFixLeft(node: AVLNode): AVLNode = {
+    if (avlHeight(node.left.left) < avlHeight(node.left.right)) {
+      node.left = rotLeft(node.left)
+    }
+    rotRight(node)
+  }
+
+  def avlFixRight(node: AVLNode): AVLNode = {
+    if (avlHeight(node.right.right) < avlHeight(node.right.left)) {
+      node.right = rotRight(node.right)
+    }
+    rotLeft(node)
+  }
+
 }
