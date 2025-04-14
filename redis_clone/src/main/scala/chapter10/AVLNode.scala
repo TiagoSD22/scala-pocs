@@ -25,5 +25,22 @@ object AVLNode {
   def avlHeight(node: AVLNode): Int = if (node != null) node.height else 0
   def avlCnt(node: AVLNode): Int = if (node != null) node.cnt else 0
 
+  def rotLeft(node: AVLNode): AVLNode = {
+    val parent = node.parent
+    val newNode = node.right
+    val inner = newNode.left
 
+    node.right = inner
+    if (inner != null) inner.parent = node
+
+    newNode.parent = parent
+    newNode.left = node
+    node.parent = newNode
+
+    avlUpdate(node)
+    avlUpdate(newNode)
+    newNode
+  }
+
+  
 }
