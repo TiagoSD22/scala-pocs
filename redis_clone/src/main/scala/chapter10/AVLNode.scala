@@ -16,4 +16,14 @@ object AVLNode {
     node.height = 1
     node.cnt = 1
   }
+
+  def avlUpdate(node: AVLNode): Unit = {
+    node.height = 1 + max(avlHeight(node.left), avlHeight(node.right))
+    node.cnt = 1 + avlCnt(node.left) + avlCnt(node.right)
+  }
+
+  def avlHeight(node: AVLNode): Int = if (node != null) node.height else 0
+  def avlCnt(node: AVLNode): Int = if (node != null) node.cnt else 0
+
+
 }
