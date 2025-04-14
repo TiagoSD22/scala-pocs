@@ -73,4 +73,65 @@ object AVLNode {
     rotLeft(node)
   }
 
+  def avlFix(node: AVLNode): AVLNode = {
+    var current = node
+    while (true) {
+      val parent = current.parent
+      avlUpdate(current)
+
+      val l = avlHeight(current.left)
+      val r = avlHeight(current.right)
+
+      if (l == r + 2) {
+        current = avlFixLeft(current)
+      } else if (l + 2 == r) {
+        current = avlFixRight(current)
+      }
+
+      if (parent == null) return current
+      current = parent
+    }
+    current
+  }
+
+  def avlDelEasy(node: AVLNode): AVLNode = {
+    require(node.left == null || node.right == null, "Node must have at most one child")
+    val child = if (node.left != null) node.left else node.right
+    val parent = node.parent
+
+    if (child != null) child.parent = parent
+
+    if (parent == null) {
+      child
+    } else {
+      if (parent.left == node) parent.left = child else parent.right = child
+      avlFix(parent)
+    }
+  }
+
+  def avlDel(node: AVLNode): AVLNode = {
+    if (node.left == null || node.right == null) {
+      return avlDelEasy(node)
+    }
+
+    var victim = node.right
+    while (victim.left != null) {
+      victim = victim.left
+    }
+
+    val root = avlDelEasy(victim)
+    victim.left = node.left
+    victim.right = node.right
+    victim.parent = node.parent
+
+    if (victim.left != null) victim.left.parent = victim
+    if (victim.right != null) victim.right.parent = victim
+
+    if (node.parent == null) {
+      victim
+    } else {
+      if (node.parent.left == node) node.parent.left = victim else node.parent.right = victim
+      root
+    }
+  }
 }
