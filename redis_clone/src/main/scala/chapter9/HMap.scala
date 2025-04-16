@@ -103,7 +103,10 @@ class HMap {
 
   def hmDelete(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
     hmHelpRehashing()
-    newer.hLookup(key, eq).flatMap(newer.hDetach).orElse(older.hLookup(key, eq).flatMap(older.hDetach))
+    newer.hLookup(key, eq) match {
+      case Some(node) => newer.hDetach(Some(node))
+      case None => older.hLookup(key, eq).flatMap(node => older.hDetach(Some(node)))
+    }
   }
 
   def hmClear(): Unit = {
