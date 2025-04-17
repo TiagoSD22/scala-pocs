@@ -5,7 +5,7 @@ import zio.{ExitCode, ULayer, ZIO, ZLayer}
 object App extends zio.ZIOAppDefault {
 
   val product = Product("1", "Laptop", 1000.00)
-  val state = State("California")
+  val state = State("New York")
   val year = 2023
 
   val taxRatesConfig: Map[(String, Int), BigDecimal] = Map(
