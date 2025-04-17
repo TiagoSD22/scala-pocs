@@ -25,3 +25,10 @@ class Conn(val socket: Socket) {
   val outgoing: Buffer = new Buffer()
 }
 
+// Utility functions
+object Utils {
+  def log(msg: String): Unit = println(msg)
+  def logError(msg: String, ex: Throwable): Unit = println(s"Error: $msg - ${ex.getMessage}")
+}
+
+
