@@ -43,4 +43,15 @@ def parseRequest(data: Array[Byte]): Try[List[String]] = Try {
   }.toList
 }
 
+// Example request handler
+def handleRequest(cmd: List[String], conn: Conn): Unit = {
+  cmd match {
+    case "get" :: key :: Nil =>
+      conn.outgoing.append(s"GET: $key".getBytes)
+    case "set" :: key :: value :: Nil =>
+      conn.outgoing.append(s"SET: $key -> $value".getBytes)
+    case _ =>
+      conn.outgoing.append("Unknown command".getBytes)
+  }
+}
 
