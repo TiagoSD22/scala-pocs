@@ -31,4 +31,16 @@ object Utils {
   def logError(msg: String, ex: Throwable): Unit = println(s"Error: $msg - ${ex.getMessage}")
 }
 
+// Request parsing
+def parseRequest(data: Array[Byte]): Try[List[String]] = Try {
+  val buffer = ByteBuffer.wrap(data)
+  val nstr = buffer.getInt
+  (0 until nstr).map { _ =>
+    val len = buffer.getInt
+    val strBytes = new Array[Byte](len)
+    buffer.get(strBytes)
+    new String(strBytes)
+  }.toList
+}
+
 
