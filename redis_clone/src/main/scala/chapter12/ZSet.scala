@@ -59,5 +59,13 @@ class ZSet {
     // Fix AVL tree balance (not implemented here for brevity)
   }
 
+  // Delete a node from the AVL tree
+  private def treeDelete(node: ZNode): Unit = {
+    // AVL tree deletion logic (not implemented here for brevity)
+  }
 
+  // Lookup a node by name
+  def lookup(name: String): Option[ZNode] = hmap.get(name)
+
+ 
 }
