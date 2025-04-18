@@ -67,5 +67,34 @@ class ZSet {
   // Lookup a node by name
   def lookup(name: String): Option[ZNode] = hmap.get(name)
 
- 
+  // Delete a node by name
+  def delete(name: String): Unit = {
+    hmap.get(name).foreach { node =>
+      hmap.remove(name)
+      treeDelete(node)
+    }
+  }
+
+  // Find the first node with a score >= the given score
+  def seekGE(score: Double, name: String): Option[ZNode] = {
+    var current = root
+    var result: Option[ZNode] = None
+
+    while (current.isDefined) {
+      if (current.get.score > score || (current.get.score == score && current.get.name >= name)) {
+        result = current
+        current = current.get.left
+      } else {
+        current = current.get.right
+      }
+    }
+
+    result
+  }
+
+  // Clear the ZSet
+  def clear(): Unit = {
+    hmap.clear()
+    root = None
+  }
 }
