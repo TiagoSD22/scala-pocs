@@ -24,5 +24,14 @@ class ZSet {
     }
   }
 
+  // Update the score of an existing node
+  private def update(node: ZNode, score: Double): Unit = {
+    if (node.score != score) {
+      treeDelete(node)
+      node.score = score
+      treeInsert(node)
+    }
+  }
+
   
 }
