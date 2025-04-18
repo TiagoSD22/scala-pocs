@@ -33,5 +33,31 @@ class ZSet {
     }
   }
 
-  
+  // Insert into the AVL tree
+  private def treeInsert(node: ZNode): Unit = {
+    var parent: Option[ZNode] = None
+    var current = root
+
+    while (current.isDefined) {
+      parent = current
+      current = if (node.score < current.get.score || (node.score == current.get.score && node.name < current.get.name)) {
+        current.get.left
+      } else {
+        current.get.right
+      }
+    }
+
+    node.parent = parent
+    if (parent.isEmpty) {
+      root = Some(node)
+    } else if (node.score < parent.get.score || (node.score == parent.get.score && node.name < parent.get.name)) {
+      parent.get.left = Some(node)
+    } else {
+      parent.get.right = Some(node)
+    }
+
+    // Fix AVL tree balance (not implemented here for brevity)
+  }
+
+
 }
