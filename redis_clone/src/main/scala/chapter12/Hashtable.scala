@@ -62,3 +62,22 @@ class HTab(initialSize: Int) {
     }
   }
 }
+
+// Represents a hashmap with rehashing
+class HMap {
+  private val kRehashingWork = 128
+  private val kMaxLoadFactor = 8
+
+  private var newer = new HTab(4)
+  private var older: Option[HTab] = None
+  private var migratePos: Int = 0
+
+  def insert(node: HNode): Unit = {
+    newer.insert(node)
+    if (older.isEmpty && newer.size >= (newer.mask + 1) * kMaxLoadFactor) {
+      triggerRehashing()
+    }
+    helpRehashing()
+  }
+
+}
