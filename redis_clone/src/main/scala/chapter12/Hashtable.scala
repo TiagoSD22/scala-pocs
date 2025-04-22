@@ -107,5 +107,24 @@ class HMap {
     migratePos = 0
   }
 
-
+  private def helpRehashing(): Unit = {
+    var nwork = 0
+    while (nwork < kRehashingWork && older.exists(_.size > 0)) {
+      older.foreach { old =>
+        while (migratePos <= old.mask && old.table(migratePos).isEmpty) {
+          migratePos += 1
+        }
+        if (migratePos <= old.mask) {
+          old.table(migratePos).foreach { node =>
+            newer.insert(node)
+            old.detach(node, _ == _)
+            nwork += 1
+          }
+        }
+      }
+      if (older.exists(_.size == 0)) {
+        older = None
+      }
+    }
+  }
 }
