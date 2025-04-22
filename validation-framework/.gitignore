@@ -1,0 +1,51 @@
+# sbt specific
+target/
+project/target/
+project/project/
+
+# IntelliJ IDEA specific
+.idea/
+*.iml
+*.iws
+out/
+
+# MacOS specific
+.DS_Store
+
+# Logs
+*.log
+
+# Scala specific
+*.class
+*.cache
+*.log
+*.tmp
+
+# sbt dependency cache
+lib_managed/
+src_managed/
+.ensime_cache/
+.metals/
+.bloop/
+.vscode/
+
+# Test results
+test-reports/
+
+# Generated files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.class
+*.obj
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Other
+*.swp
+*~
