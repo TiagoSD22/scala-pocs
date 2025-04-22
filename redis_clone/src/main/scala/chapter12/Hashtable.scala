@@ -80,4 +80,10 @@ class HMap {
     helpRehashing()
   }
 
+  def lookup(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
+    helpRehashing()
+    newer.lookup(key, eq).orElse(older.flatMap(_.lookup(key, eq)))
+  }
+
+  
 }
