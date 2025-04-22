@@ -85,5 +85,27 @@ class HMap {
     newer.lookup(key, eq).orElse(older.flatMap(_.lookup(key, eq)))
   }
 
-  
+  def delete(key: HNode, eq: (HNode, HNode) => Boolean): Option[HNode] = {
+    helpRehashing()
+    newer.detach(key, eq).orElse(older.flatMap(_.detach(key, eq)))
+  }
+
+  def clear(): Unit = {
+    newer = new HTab(4)
+    older = None
+  }
+
+  def size: Int = newer.size + older.map(_.size).getOrElse(0)
+
+  def foreach(f: HNode => Boolean): Boolean = {
+    newer.foreach(f) && older.forall(_.foreach(f))
+  }
+
+  private def triggerRehashing(): Unit = {
+    older = Some(newer)
+    newer = new HTab((newer.mask + 1) * 2)
+    migratePos = 0
+  }
+
+
 }
