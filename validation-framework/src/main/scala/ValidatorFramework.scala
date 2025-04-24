@@ -20,6 +20,9 @@ object ValidatorFramework {
       case ((name, value), Some(Email())) =>
         if (!EmailValidator.validate(value.toString)) Some(s"Field '$name': ${EmailValidator.errorMessage}")
         else None
+      case ((name, value), Some(NonEmpty())) =>
+        if (!NonEmptyValidator.validate(value.toString)) Some(s"Field '$name': ${NonEmptyValidator.errorMessage}")
+        else None
       case _ => None
     }
   }
