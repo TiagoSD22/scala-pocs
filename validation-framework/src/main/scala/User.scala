@@ -1,4 +1,4 @@
 case class User(
-  @Email email: String, 
-  name: String
+  @Email email: String,
+  @NonEmpty name: String
 )
