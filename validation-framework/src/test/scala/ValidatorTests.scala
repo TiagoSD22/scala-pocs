@@ -7,4 +7,12 @@ class ValidatorTests extends AnyFunSuite {
     assert(EmailValidator.validate("user.name+tag+sorting@example.com"))
   }
 
+  test("EmailValidator should invalidate incorrect email format") {
+    assert(!EmailValidator.validate("plainaddress"))
+    assert(!EmailValidator.validate("missing@domain"))
+    assert(!EmailValidator.validate("missing.domain@"))
+    assert(!EmailValidator.validate("missing@.com"))
+  }
+
+  
 }
