@@ -18,5 +18,10 @@ class ValidatorTests extends AnyFunSuite {
     assert(EmailValidator.errorMessage == "Invalid email format")
   }
 
-  
+  test("NonEmptyValidator should validate non-empty strings") {
+    assert(NonEmptyValidator.validate("Non-empty string"))
+    assert(NonEmptyValidator.validate(" "))
+  }
+
+
 }
