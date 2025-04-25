@@ -14,5 +14,9 @@ class ValidatorTests extends AnyFunSuite {
     assert(!EmailValidator.validate("missing@.com"))
   }
 
+  test("EmailValidator should return correct error message") {
+    assert(EmailValidator.errorMessage == "Invalid email format")
+  }
+
   
 }
