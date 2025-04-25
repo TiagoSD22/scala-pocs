@@ -23,5 +23,11 @@ class ValidatorTests extends AnyFunSuite {
     assert(NonEmptyValidator.validate(" "))
   }
 
+  test("NonEmptyValidator should invalidate empty strings") {
+    assert(!NonEmptyValidator.validate(""))
+  }
 
+  test("NonEmptyValidator should return correct error message") {
+    assert(NonEmptyValidator.errorMessage == "Field cannot be empty")
+  }
 }
