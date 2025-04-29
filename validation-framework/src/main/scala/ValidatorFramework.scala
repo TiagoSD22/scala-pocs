@@ -23,6 +23,9 @@ object ValidatorFramework {
       case ((name, value), Some(NonEmpty())) =>
         if (!NonEmptyValidator.validate(value.toString)) Some(s"Field '$name': ${NonEmptyValidator.errorMessage}")
         else None
+      case ((name, value), Some(Positive())) =>
+        if (!PositiveValidator.validate(value.asInstanceOf[Int])) Some(s"Field '$name': ${PositiveValidator.errorMessage}")
+        else None
       case _ => None
     }
   }
