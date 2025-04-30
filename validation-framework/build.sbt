@@ -6,3 +6,5 @@ lazy val root = (project in file("."))
   .settings(
     name := "validation-framework"
   )
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
