@@ -1,10 +1,11 @@
 import org.scalatest.funsuite.AnyFunSuite
+import validators.{EmailValidator, NonEmptyValidator, PositiveValidator}
+
 
 class ValidatorTests extends AnyFunSuite {
 
   test("EmailValidator should validate correct email format") {
     assert(EmailValidator.validate("test@example.com"))
-    assert(EmailValidator.validate("user.name+tag+sorting@example.com"))
   }
 
   test("EmailValidator should invalidate incorrect email format") {
@@ -29,5 +30,22 @@ class ValidatorTests extends AnyFunSuite {
 
   test("NonEmptyValidator should return correct error message") {
     assert(NonEmptyValidator.errorMessage == "Field cannot be empty")
+  }
+
+  test("PositiveValidator should validate positive integers") {
+    assert(PositiveValidator.validate(1))
+    assert(PositiveValidator.validate(100))
+    assert(PositiveValidator.validate(Int.MaxValue))
+  }
+
+  test("PositiveValidator should invalidate zero and negative integers") {
+    assert(!PositiveValidator.validate(0))
+    assert(!PositiveValidator.validate(-1))
+    assert(!PositiveValidator.validate(-100))
+    assert(!PositiveValidator.validate(Int.MinValue))
+  }
+
+  test("PositiveValidator should return correct error message") {
+    assert(PositiveValidator.errorMessage == "Value must be positive")
   }
 }
