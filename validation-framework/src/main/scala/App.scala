@@ -1,3 +1,6 @@
+import models.User
+import validators.ValidatorFramework
+
 @main def runValidation(): Unit = {
   val user = User(email = "invalid-email", name = "John Doe")
   val errors = ValidatorFramework.validate(user)
