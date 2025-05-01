@@ -15,4 +15,9 @@ class StressTest extends AnyFunSuite {
     names(Random.nextInt(names.length))
   }
 
+  def randomUser(): User = {
+    User(email = randomEmail(), name = randomName())
+  }
+
+
 }
