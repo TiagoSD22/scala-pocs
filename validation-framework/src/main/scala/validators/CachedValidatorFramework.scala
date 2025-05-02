@@ -12,7 +12,21 @@ object CachedValidatorFramework {
   private val cache = mutable.Map[String, List[(String, Any, Option[StaticAnnotation])]]()
 
   inline def validate[T](entity: T): List[String] = {
-
+    val entityType = entity.getClass.getName
+    val fields = cache.getOrElseUpdate(entityType, extractFields(entity))
+    fields.flatMap {
+      case (name, value, Some(Email())) =>
+        if (!EmailValidator.validate(value.toString)) Some(s"Field '$name': ${EmailValidator.errorMessage}")
+        else None
+      case (name, value, Some(NonEmpty())) =>
+        if (!NonEmptyValidator.validate(value.toString)) Some(s"Field '$name': ${NonEmptyValidator.errorMessage}")
+        else None
+      case (name, value, Some(Positive())) =>
+        if (!PositiveValidator.validate(value.asInstanceOf[Int])) Some(s"Field '$name': ${PositiveValidator.errorMessage}")
+        else None
+      case _ => None
+    }
+  }
 
   private inline def extractFields[T](entity: T): List[(String, Any, Option[StaticAnnotation])] = {
     inline erasedValue[T] match {
