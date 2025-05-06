@@ -28,5 +28,11 @@ class CachedValidatorFrameworkTest extends AnyFunSuite {
     assert(errors.contains("Field 'name': Field cannot be empty"))
   }
 
-  
+  test("validate should return error for non-positive age") {
+    val entity = TestEntity("test@example.com", "John Doe", -5)
+    val errors = CachedValidatorFramework.validate(entity)
+    assert(errors.contains("Field 'age': Value must be positive"))
+  }
+
+
 }
