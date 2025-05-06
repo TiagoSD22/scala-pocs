@@ -22,5 +22,7 @@ object ValidatorComparisonApp {
     names(Random.nextInt(names.length))
   }
 
+  def randomAge(): Int = Random.between(-10, 100)
+
   
 }
