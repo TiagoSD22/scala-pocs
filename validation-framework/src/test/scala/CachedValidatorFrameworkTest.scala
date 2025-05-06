@@ -22,5 +22,11 @@ class CachedValidatorFrameworkTest extends AnyFunSuite {
     assert(errors.contains("Field 'email': Invalid email format"))
   }
 
+  test("validate should return error for empty name") {
+    val entity = TestEntity("test@example.com", "", 25)
+    val errors = CachedValidatorFramework.validate(entity)
+    assert(errors.contains("Field 'name': Field cannot be empty"))
+  }
+
   
 }
