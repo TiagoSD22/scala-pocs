@@ -24,5 +24,9 @@ object ValidatorComparisonApp {
 
   def randomAge(): Int = Random.between(-10, 100)
 
+  def randomEntity(): TestEntity = {
+    TestEntity(randomEmail(), randomName(), randomAge())
+  }
+
   
 }
