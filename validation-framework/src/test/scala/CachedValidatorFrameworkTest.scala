@@ -10,5 +10,11 @@ case class TestEntity(
 
 class CachedValidatorFrameworkTest extends AnyFunSuite {
 
+  test("validate should return no errors for valid entity") {
+    val entity = TestEntity("test@example.com", "John Doe", 25)
+    val errors = CachedValidatorFramework.validate(entity)
+    assert(errors.isEmpty)
+  }
 
+  
 }
