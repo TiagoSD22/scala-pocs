@@ -13,7 +13,9 @@ object ValidatorComparisonApp {
     names(Random.nextInt(names.length))
   }
 
-
+  def randomProduct(): Product = {
+    Product(randomPrice(), randomName())
+  }
 
 
 }
