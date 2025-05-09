@@ -18,7 +18,7 @@ object ValidatorComparisonApp {
   }
 
   def main(args: Array[String]): Unit = {
-    val entityCount = 100000
+    val entityCount = 100000000
     val products = (1 to entityCount).map(_ => randomProduct())
 
     // Measure performance of ValidatorFramework
