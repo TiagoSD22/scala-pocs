@@ -1,7 +1,6 @@
 package validators
 
 import annotations.{Email, NonEmpty, Positive}
-import models.Product
 
 import scala.annotation.StaticAnnotation
 import scala.collection.mutable
@@ -9,31 +8,43 @@ import scala.compiletime.{constValueTuple, erasedValue, summonInline}
 import scala.deriving.Mirror
 
 object CachedValidatorFramework {
-  // Modified to store only field name and annotation
-  private val cache = mutable.Map[String, List[(String, Option[StaticAnnotation])]]()
+  // Cache stores field name and annotation pairs
+  private val cache = mutable.Map[Class[_], List[(String, Option[StaticAnnotation])]]()
 
   inline def validate[T](entity: T): List[String] = {
-    val entityType = entity.getClass.getName
-    val fieldMetadata = cache.getOrElseUpdate(entityType, extractFieldMetadata(entity))
+    // Use class object directly as key (faster than getName)
+    val entityClass = entity.getClass
+    val fieldMetadata = cache.getOrElseUpdate(entityClass, extractFieldMetadata(entity))
 
-    // Get current field values
-    val fieldValues = entity.asInstanceOf[Product].productIterator.toList
+    // Get values directly without intermediate List creation
+    val productEntity = entity.asInstanceOf[scala.Product]
 
-    // Combine metadata with current values
-    fieldMetadata.zip(fieldValues).flatMap {
-      case ((name, Some(Email())), value) =>
-        if (!EmailValidator.validate(value.toString)) Some(s"Field '$name': ${EmailValidator.errorMessage}")
-        else None
-      case ((name, Some(NonEmpty())), value) =>
-        if (!NonEmptyValidator.validate(value.toString)) Some(s"Field '$name': ${NonEmptyValidator.errorMessage}")
-        else None
-      case ((name, Some(Positive())), value) =>
-        if (!PositiveValidator.validate(value.asInstanceOf[Int])) Some(s"Field '$name': ${PositiveValidator.errorMessage}")
-        else None
-      case _ => None
+    // Avoid creating intermediate collections with direct iteration
+    var errors = List.empty[String]
+    var i = 0
+    while (i < fieldMetadata.length) {
+      val (name, annotOpt) = fieldMetadata(i)
+      val value = productEntity.productElement(i)
+
+      annotOpt match {
+        case Some(Email()) =>
+          if (!EmailValidator.validate(value.toString))
+            errors = s"Field '$name': ${EmailValidator.errorMessage}" :: errors
+        case Some(NonEmpty()) =>
+          if (!NonEmptyValidator.validate(value.toString))
+            errors = s"Field '$name': ${NonEmptyValidator.errorMessage}" :: errors
+        case Some(Positive()) =>
+          if (!PositiveValidator.validate(value.asInstanceOf[Int]))
+            errors = s"Field '$name': ${PositiveValidator.errorMessage}" :: errors
+        case _ => // No validation needed
+      }
+      i += 1
     }
+
+    errors.reverse
   }
 
+  // Keep the metadata extraction methods as they were
   private inline def extractFieldMetadata[T](entity: T): List[(String, Option[StaticAnnotation])] = {
     inline erasedValue[T] match {
       case _: Mirror.ProductOf[T] =>
