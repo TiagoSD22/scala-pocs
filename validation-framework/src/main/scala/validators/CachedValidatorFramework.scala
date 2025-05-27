@@ -7,6 +7,7 @@ import scala.collection.mutable
 import scala.compiletime.{constValueTuple, erasedValue, summonInline}
 import scala.deriving.Mirror
 import java.lang.reflect.Field
+import java.lang.annotation.Annotation
 
 object CachedValidatorFramework {
   // Cache for field metadata
@@ -107,14 +108,21 @@ object CachedValidatorFramework {
   }
 
   private def findValidationAnnotation(field: Field): Option[StaticAnnotation] = {
-    if (field.isAnnotationPresent(classOf[Email])) {
-      Some(Email())
-    } else if (field.isAnnotationPresent(classOf[NonEmpty])) {
-      Some(NonEmpty())
-    } else if (field.isAnnotationPresent(classOf[Positive])) {
-      Some(Positive())
-    } else {
-      None
+    // Get all annotations on the field
+    val annotations = field.getDeclaredAnnotations()
+
+    // Look for our custom annotations by class name
+    for (annotation <- annotations) {
+      val annotationClass = annotation.annotationType().getName
+      if (annotationClass.endsWith("Email")) {
+        return Some(Email())
+      } else if (annotationClass.endsWith("NonEmpty")) {
+        return Some(NonEmpty())
+      } else if (annotationClass.endsWith("Positive")) {
+        return Some(Positive())
+      }
     }
+
+    None
   }
 }
