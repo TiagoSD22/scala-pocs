@@ -98,7 +98,7 @@ object CachedValidatorFramework {
   }
 
   private def extractMetadataUsingJavaReflection(clazz: Class[_]): List[(String, Option[StaticAnnotation])] = {
-    val fields = clazz.getDeclaredFields()
+    val fields = clazz.getDeclaredFields
 
     fields.map { field =>
       val name = field.getName
@@ -107,22 +107,27 @@ object CachedValidatorFramework {
     }.toList
   }
 
+  import scala.util.boundary
+  import scala.util.boundary.break
+
   private def findValidationAnnotation(field: Field): Option[StaticAnnotation] = {
     // Get all annotations on the field
-    val annotations = field.getDeclaredAnnotations()
+    val annotations = field.getDeclaredAnnotations
 
-    // Look for our custom annotations by class name
-    for (annotation <- annotations) {
-      val annotationClass = annotation.annotationType().getName
-      if (annotationClass.endsWith("Email")) {
-        return Some(Email())
-      } else if (annotationClass.endsWith("NonEmpty")) {
-        return Some(NonEmpty())
-      } else if (annotationClass.endsWith("Positive")) {
-        return Some(Positive())
+    boundary {
+      // Look for our custom annotations by class name
+      for (annotation <- annotations) {
+        val annotationClass = annotation.annotationType().getName
+        if (annotationClass.endsWith("Email")) {
+          break(Some(Email()))
+        } else if (annotationClass.endsWith("NonEmpty")) {
+          break(Some(NonEmpty()))
+        } else if (annotationClass.endsWith("Positive")) {
+          break(Some(Positive()))
+        }
       }
-    }
 
-    None
+      None
+    }
   }
 }
